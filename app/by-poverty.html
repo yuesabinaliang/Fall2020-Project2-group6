@@ -97,7 +97,7 @@
 
     svg.call(tip);
 
-    d3.tsv("https://raw.githubusercontent.com/freezingdaisy/LeetcodePractice/master/by-poverty.tsv", type, function(error, data) {
+    d3.tsv("https://raw.githubusercontent.com/TZstatsADS/Fall2020-Project2-group6/master/data/by-poverty.tsv?token=AHPHT3TZPAXGSUVAMFPWG3S7RHNKK", type, function(error, data) {
         x.domain(data.map(function(d) { return d.POVERTY_GROUP; }));
         y.domain([0, d3.max(data, function(d) { return d.CASE_COUNT; })]);
 
