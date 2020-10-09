@@ -19,9 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53b25014-dc38-4df4-9e94-c7a4e8a5e4cf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/by-poverty.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/by-poverty.html" afterDir="false" />
-    </list>
+    <list default="true" id="53b25014-dc38-4df4-9e94-c7a4e8a5e4cf" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,7 +63,7 @@
       <updated>1602255360862</updated>
       <workItem from="1602255361959" duration="2066000" />
       <workItem from="1602263483648" duration="176000" />
-      <workItem from="1602264961874" duration="168000" />
+      <workItem from="1602264961874" duration="182000" />
     </task>
     <servers />
   </component>
