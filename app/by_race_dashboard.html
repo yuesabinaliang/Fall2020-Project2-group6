@@ -14,26 +14,26 @@
 
         #pieChart {
             position:absolute;
-            top:10px;
-            left:10px;
-            width:400px;
-            height: 400px;
+            top:30px;
+            left:50px;
+            width:200px;
+            height: 200px;
         }
 
 
 
         #lineChart {
             position:absolute;
-            top:10px;
-            left:410px;
-            height: 150px;
+            top:30px;
+            left:310px;
+            height: 300px;
         }
 
         #barChart {
             position:absolute;
-            top:160px;
-            left:410px;
-            height: 250px;
+            top:30px;
+            left:280px;
+            height: 200px;
         }
 
         .slice {
@@ -164,8 +164,8 @@
 
 
 
-        var 	width = 400,
-            height = 400,
+        var 	width = 300,
+            height = 300,
             outerRadius = Math.min(width, height) / 2,
             innerRadius = outerRadius * .999,
             // for animation
@@ -237,7 +237,7 @@
         vis.append("svg:text")
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
-            .text("COVID-19 STATS in NY")
+            .text("COVID-19 STATS")
             .attr("class","title")
         ;
 
@@ -339,9 +339,9 @@
 
     function dsBarChartBasics() {
 
-        var margin = {top: 30, right: 5, bottom: 20, left: 50},
-            width = 600 - margin.left - margin.right,
-            height = 250 - margin.top - margin.bottom,
+        var margin = {top: 60, right: 80, bottom: 20, left: 80},
+            width = 660 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom,
             colorBar = d3.scale.category20(),
             barPadding = 1
         ;
