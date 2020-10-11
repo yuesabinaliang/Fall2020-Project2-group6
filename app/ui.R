@@ -30,6 +30,7 @@ library(shinyWidgets)
 library(reshape2)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # bootstrapPage(
 #   tags$head(includeHTML("www/gtag.html")),
 #   navbarPage(theme = shinytheme("flatly"),
@@ -311,6 +312,8 @@ dashboardPage(
 
             tabItem(tabName = "Wealth",
 =======
+=======
+>>>>>>> Stashed changes
 bootstrapPage(
   tags$head(includeHTML("www/gtag.html")),
   navbarPage(theme = shinytheme("flatly"),
@@ -434,6 +437,9 @@ bootstrapPage(
                 #sub3 begin----------------------------------------------------------------------------------------
 
                     tabPanel("Wealth",icon = icon("dollar-sign"),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                       fluidPage(
                         fluidRow(column(12,
@@ -443,6 +449,7 @@ bootstrapPage(
                                           tags$li("Hover the mouse over a year bar in histogram will modify the pie chart and legend."),
                                           tags$li("Hover the mouse over pie slice should change the histogram.")
                                         )))
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                                  ,
                                  box(width = 12, height = 500,
@@ -454,6 +461,8 @@ bootstrapPage(
 
  )))
 =======
+=======
+>>>>>>> Stashed changes
                                  # ,
                                  # box(width = 12, height = 500,
                                  #     status = "primary",solidHeader = FALSE,
@@ -619,5 +628,9 @@ bootstrapPage(
 # 
 #   #sub3 end--------------------------------------------------------------------------------------------
 # 
+<<<<<<< Updated upstream
+#  )))
+>>>>>>> Stashed changes
+=======
 #  )))
 >>>>>>> Stashed changes
