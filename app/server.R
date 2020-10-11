@@ -37,6 +37,7 @@ library(shiny)
 library(shinythemes)
 library(plotly)
 library(ggplot2)
+library(reshape2)
 #can run RData directly to get the necessary date for the app
 #global.r will enable us to get new data everyday
 #update data with automated script
@@ -100,87 +101,69 @@ shinyServer(function(input,output){
     
     # Home end -----------------------------------------------------------------------------------------------------
     
+    by_boro <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/by-boro.csv"))
+    by_boro$CASE_RATE <- by_boro$CASE_RATE/100000
+    by_boro$HOSPITALIZED_RATE <- by_boro$HOSPITALIZED_RATE/100000
+    by_boro$DEATH_RATE <- by_boro$DEATH_RATE/100000
+    
+    output$CASE_RATE <- renderPlot({
+        ggplot(by_boro, aes(y=CASE_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        geom_bar(stat="identity",fill="lightblue") +
+        xlab("BOROUGH_GROUP")
+        })
+        
+    output$HOSPITALIZED_RATE <- renderPlot({
+        ggplot(by_boro, aes(y=HOSPITALIZED_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        geom_bar(stat="identity",fill="lightblue") +
+        xlab("BOROUGH_GROUP")
+    })
+    
+    output$DEATH_RATE <- renderPlot({
+        ggplot(by_boro, aes(y=DEATH_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        geom_bar(stat="identity",fill="lightblue") +
+        xlab("BOROUGH_GROUP")
+    })
+    
+    output$CASE_COUNT <- renderPlot({
+        ggplot(by_boro, aes(y=CASE_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        geom_bar(stat="identity",fill="lightblue") +
+        xlab("BOROUGH_GROUP")
+    })
+    
+    output$HOSPITALIZED_COUNT <- renderPlot({
+        ggplot(by_boro, aes(y=HOSPITALIZED_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        geom_bar(stat="identity",fill="lightblue") +
+        xlab("BOROUGH_GROUP")
+    })
+    
+    output$DEATH_COUNT <- renderPlot({
+        ggplot(by_boro, aes(y=DEATH_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        geom_bar(stat="identity",fill="lightblue") +
+        xlab("BOROUGH_GROUP")
+    })
+    
+    by_poverty <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/by-poverty.csv"))
+    
+    poverty <- ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=POVERTY_GROUP)) + 
+        geom_bar(stat="identity",fill="#edae49")
+
+    output$case_rate_poverty <- renderPlotly({
+        ggplotly(poverty)
+    })
+    
+    index <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/case-hosp-death.csv"))
+    
+    index_df <- melt(index[,1:4],id="DATE_OF_INTEREST")
+    index_df$DATE_OF_INTEREST<- as.Date(index_df$DATE_OF_INTEREST,format = "%m/%d/%y")
+    
+    index_gg <- ggplot(index_df,aes(x=DATE_OF_INTEREST,y=value,color=variable,group= variable)) +
+                        geom_line() +
+                        scale_x_date(date_labels = "%b/%d")
+    
+    output$ggplotly_index <- renderPlotly({
+        ggplotly(index_gg)
+    })
+    
+    
 })
 
-
-# shinyServer(function(input, output) {
-# #----------------------------------------
-# #tab panel 1 - Home Plots
-# #preapare data for plot
-# output$case_overtime <- renderPlotly({
-#     #determin the row index for subset
-#     req(input$log_scale)
-#     end_date_index <- which(date_choices == input$date)
-#     #if log scale is not enabled, we will just use cases
-#     if (input$log_scale == FALSE) {
-#         #render plotly figure
-#         case_fig <- plot_ly()
-#         #add comfirmed case lines
-#         case_fig <- case_fig %>% add_lines(x = ~date_choices[1:end_date_index], 
-#                              y = ~as.numeric(aggre_cases[input$country,])[1:end_date_index],
-#                              line = list(color = 'rgba(67,67,67,1)', width = 2),
-#                              name = 'Confirmed Cases')
-#         #add death line 
-#         case_fig <- case_fig %>% add_lines(x = ~date_choices[1:end_date_index],
-#                                y = ~as.numeric(aggre_death[input$country,])[1:end_date_index],
-#                                name = 'Death Toll')
-#         #set the axis for the plot
-#         case_fig <- case_fig %>% 
-#             layout(title = paste0(input$country,'\t','Trend'),
-#                    xaxis = list(title = 'Date',showgrid = FALSE), 
-#                    yaxis = list(title = 'Comfirmed Cases/Deaths',showgrid=FALSE)
-#                    )
-#         }
-#     #if enable log scale, we need to take log of the y values
-#     else{
-#         #render plotly figure
-#         case_fig <- plot_ly()
-#         #add comfirmed case lines
-#         case_fig <- case_fig %>% add_lines(x = ~date_choices[1:end_date_index], 
-#                                            y = ~log(as.numeric(aggre_cases[input$country,])[1:end_date_index]),
-#                                            line = list(color = 'rgba(67,67,67,1)', width = 2),
-#                                            name = 'Confirmed Cases')
-#         #add death line 
-#         case_fig <- case_fig %>% add_lines(x = ~date_choices[1:end_date_index],
-#                                            y = ~log(as.numeric(aggre_death[input$country,])[1:end_date_index]),
-#                                            name = 'Death Toll')
-#         #set the axis for the plot
-#         case_fig <- case_fig %>% 
-#             layout(title = paste0(input$country,'<br>','\t','Trends'),
-#                    xaxis = list(title = 'Date',showgrid = FALSE), 
-#                    yaxis = list(title = 'Comfirmed Cases/Deaths(Log Scale)',showgrid=FALSE)
-#             )
-#     }
-#     return(case_fig)
-#         })
-# #----------------------------------------
-# #tab panel 2 - Maps
-# na_drop <- read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/data-by-modzcta.csv")
-# na_drop <- melt(na_drop, id.vars=1:3, value.name="Count", variable.name="Category")
-# zip_code <- read.csv('https://raw.githubusercontent.com/daling11/xxxxxxxx/master/zip_code_database.csv')
-# colnames(zip_code)<-c('MODIFIED_ZCTA', 'lat', 'lon')
-# na_drop <- merge(na_drop, zip_code, by='MODIFIED_ZCTA')
-# 
-# shiny_data <- reactive(na_drop[which(na_drop$Category %in% input$Category & na_drop$BOROUGH_GROUP %in% input$Borough),])
-# 
-# output$map <- renderLeaflet({
-#     leaflet(options = leafletOptions(minZoom = 8, maxZoom = 18)) %>%
-#         setView(-73.9252853, 40.7910694, zoom = 10) %>%
-#         addTiles() %>%
-#         addMarkers(data = shiny_data()$Count, lng = shiny_data()$lon, lat = shiny_data()$lat,
-#                    clusterOptions = markerClusterOptions()
-#         )
-# })
-# 
-# observe({
-#     df.marker <- shiny_data()
-#     leafletProxy("mapMarker", data = df.marker) %>%
-#         clearMarkerClusters()%>%
-#         clearPopups() %>%
-#         clearMarkers() %>%
-#         addMarkers(lng = shiny_data()$lon, lat = shiny_data()$lat,
-#                    popup = paste("<b>", "Category:", "Count", shiny_data()$Count,
-#                                  "<br/>", "<b>", "Borough:", shiny_data()$BOROUGH_GROUP))
-#     clusterOptions <- markerClusterOptions()
-# })
-# }

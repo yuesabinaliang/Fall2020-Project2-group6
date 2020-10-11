@@ -14,10 +14,10 @@
 
         #pieChart {
             position:absolute;
-            top:30px;
-            left:50px;
-            width:200px;
-            height: 200px;
+            top:10px;
+            left:10px;
+            width:400px;
+            height: 400px;
         }
 
 
@@ -26,13 +26,13 @@
             position:absolute;
             top:30px;
             left:310px;
-            height: 300px;
+            height: 400px;
         }
 
         #barChart {
             position:absolute;
             top:30px;
-            left:280px;
+            left:330px;
             height: 200px;
         }
 
@@ -339,8 +339,8 @@
 
     function dsBarChartBasics() {
 
-        var margin = {top: 60, right: 80, bottom: 20, left: 80},
-            width = 660 - margin.left - margin.right,
+        var margin = {top: 60, right: 0, bottom: 20, left: 0},
+            width = 550 - margin.left - margin.right,
             height = 300 - margin.top - margin.bottom,
             colorBar = d3.scale.category20(),
             barPadding = 1
