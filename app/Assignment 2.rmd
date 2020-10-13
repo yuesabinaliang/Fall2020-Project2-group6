@@ -15,6 +15,7 @@ library(shinydashboard)
 library(leaflet)
 library(shinyWidgets)
 library(reshape2)
+library(DT)
 ```
 
 ```{r}
@@ -44,8 +45,8 @@ ui <- dashboardPage(skin = "red",
                                                   radioButtons("Category", "Choose category:",
                                                                 choices = c("COVID_CASE_COUNT","COVID_DEATH_COUNT"))
 
-                                  )
-                          )
+                                  )),
+                            tabItem(tabName = "Report", DT::dataTableOutput('table'))
                         ))
 )
 ```
@@ -78,6 +79,8 @@ server <- function(input, output) {
     na_drop <- merge(na_drop, zip_code, by='MODIFIED_ZCTA')
     #na_drop <- na_drop[which(na_drop$Category == "COVID_CASE_COUNT" | na_drop$Category == "COVID_DEATH_COUNT"),]
     #na_drop <- na_drop[rep(rownames(na_drop), na_drop$Count),]
+    address <- read.csv('https://raw.githubusercontent.com/daling11/xxxxxxxx/master/Covid_test_site.csv')
+    address$Zip <- as.character(address$Zip)
 
     shiny_data <- reactive(na_drop[which(na_drop$Category %in% input$Category & na_drop$BOROUGH_GROUP %in% input$Borough),])
 
@@ -95,7 +98,9 @@ server <- function(input, output) {
         labelOptions = labelOptions(noHide = T, direction = 'center', textOnly = T),
         clusterOptions = markerClusterOptions(iconCreateFunction=JS(sum.formula)))
 
-  })
+        })
+    output$table <- DT::renderDataTable(
+    DT::datatable(address, filter = "top"))
 }
 ```
 
