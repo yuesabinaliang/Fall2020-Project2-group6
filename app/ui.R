@@ -93,7 +93,7 @@ bootstrapPage(
                                                style = "line-height: 0;
                                         font-size=10px;"),offset=4),
                                       br(),br(),br(),br(),br(),br(),
-                                        fluidRow(p("The world cloud of NYC Covid-19 report shows that we care most about how does Covid-19 affect NYC and how can we get tests."))),
+                                        fluidRow(p("The word cloud of NYC Covid-19 report shows that we care most about how does Covid-19 affect NYC and how can we get tests."))),
                               
                         ## Xiaoli Sun Word Cloud part begins----------------------------------------------------------------------------             
                                column(width=8,
@@ -326,7 +326,7 @@ bootstrapPage(
                                           height: 100px;"),
                              h4("Xiaoli Sun"),
                              p(strong("Master in Statistics at Columbia University")),
-                             p("Contribute several Statistical Analysis plots and the World Cloud to the App."),
+                             p("Contribute several Statistical Analysis plots and the Word Cloud to the App."),
                              fluidRow(uiOutput("LinkedIn_XLS"))
                       ),
                       column(3,align = "center",
