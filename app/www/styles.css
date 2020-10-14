@@ -24,17 +24,31 @@ h1, h2, h3, h4 { font-weight: 400; }
 
 #controls {
   /* Appearance */
-  background-color: white;
+  background-color: #FFB6C1;
   padding: 10px 15px 20px 20px;
   cursor: move;
   /* Fade out while not hovering */
-  opacity: 0.85;
-  zoom: 0.9;
+  opacity: 0.65;
+  zoom: 0.95;
   transition: opacity 500ms 1s;
 }
 
 #controls:hover {
   /* Fade in while hovering */
-  opacity: 0.95;
+  opacity: 0.85;
   transition-delay: 0;
+}
+
+.container{ 
+  background-image:url(../blank-calendar-icon-png-22.jpg);
+  background-size: 180px 180px;
+  height:180px;
+  width:180px;
+  background-repeat:no-repeat;
+  font-weight:bold;
+  font-size:20px;
+  line-height:180px;
+  text-align: center;
+  vertical-align:text-bottom;
+  
 }

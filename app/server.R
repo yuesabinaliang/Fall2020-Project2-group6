@@ -20,86 +20,111 @@ library(readr)
 library(wordcloud2)
 library(DT)
 library(stringr)
-library(tidyverse)
 library(dplyr)
 library(tibble)
 library(viridis)
-library(dplyr)
-library(tibble)
 library(tidyverse)
 library(shinythemes)
 library(sf)
 library(RCurl)
 library(tmap)
 library(rgdal)
-library(leaflet)
-library(shiny)
-library(shinythemes)
 library(plotly)
 library(ggplot2)
 library(reshape2)
+library(shinydashboard)
+library(leaflet)
+library(shinyWidgets)
+
 #can run RData directly to get the necessary date for the app
 #global.r will enable us to get new data everyday
 #update data with automated script
 
 shinyServer(function(input,output){
     # tab panel 1 - Maps
-    # Xinying Feng Maps part
+    
+    ## Xinying Feng Maps part starts ------------------------------------------------------------------------------
+    
+    sum.formula <- JS("function(cluster) {
+                var markers = cluster.getAllChildMarkers();
+                var sum = 0;
+                for (i = 0; i < markers.length; i++) {
+                  sum += Number(markers[i].options.mag);
+                }
+                var size = sum/10000
+                var c = ' marker-cluster-';
+                  if (sum < 3000) {
+                    c += 'small';
+                  } else if (sum < 13000) {
+                    c += 'medium';
+                  } else {
+                    c += 'large';
+                  }
+                return new L.DivIcon({ html: '<div><span>' + sum + '</span></div>', className: 'marker-cluster' + c, iconSize: L.point(size, size)});
+              }")
+    
     na_drop <- read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/data-by-modzcta.csv")
     na_drop <- melt(na_drop, id.vars=1:3, value.name="Count", variable.name="Category")
     zip_code <- read.csv('https://raw.githubusercontent.com/daling11/xxxxxxxx/master/zip_code_database.csv')
     colnames(zip_code)<-c('MODIFIED_ZCTA', 'lat', 'lon')
     na_drop <- merge(na_drop, zip_code, by='MODIFIED_ZCTA')
-    # na_drop <- na_drop[rep(rownames(na_drop),na_drop$Count),]
+    #na_drop <- na_drop[which(na_drop$Category == "COVID_CASE_COUNT" | na_drop$Category == "COVID_DEATH_COUNT"),]
+    #na_drop <- na_drop[rep(rownames(na_drop), na_drop$Count),]
+    address <- read.csv('https://raw.githubusercontent.com/daling11/xxxxxxxx/master/Covid_test_site.csv')
+    address$Zip <- as.character(address$Zip)
     
     shiny_data <- reactive(na_drop[which(na_drop$Category %in% input$Category & na_drop$BOROUGH_GROUP %in% input$Borough),])
-
+    
     output$map <- renderLeaflet({
-        leaflet(options = leafletOptions(minZoom = 8, maxZoom = 18)) %>%
+        map<-leaflet(options = leafletOptions(minZoom = 8, maxZoom = 18)) %>%
             setView(-73.9252853, 40.7910694, zoom = 10) %>%
             addTiles() %>%
-            addMarkers(data = shiny_data()$Count, lng = shiny_data()$lon, lat = shiny_data()$lat,
-                       clusterOptions = markerClusterOptions()
-            )
+            addCircleMarkers(lng = shiny_data()$lon, lat = shiny_data()$lat, options = markerOptions(mag = shiny_data()$Count), color='red', stroke = FALSE, fillOpacity = 0.5,
+                             clusterOptions = markerClusterOptions(iconCreateFunction=JS(sum.formula),
+                                                                   popup = paste("<b>", "Count", shiny_data()$Count, "<br/>", "<b>", "Borough:", shiny_data()$BOROUGH_GROUP)))%>%
+            addProviderTiles(providers$CartoDB.Positron)%>%
+            addLabelOnlyMarkers(lng = shiny_data()$lon, lat = shiny_data()$lat,
+                                options = markerOptions(mag = shiny_data()$Count),
+                                label =  shiny_data()$Count,
+                                labelOptions = labelOptions(noHide = T, direction = 'center', textOnly = T),
+                                clusterOptions = markerClusterOptions(iconCreateFunction=JS(sum.formula)))
+        
     })
-
-    observe({
-        df.marker <- shiny_data()
-        leafletProxy("mapMarker", data = df.marker) %>%
-            clearMarkerClusters()%>%
-            clearPopups() %>%
-            clearMarkers() %>%
-            addMarkers(lng = shiny_data()$lon, lat = shiny_data()$lat,
-                       popup = paste("<b>", "Category:", "Count", shiny_data()$Count,
-                                     "<br/>", "<b>", "Borough:", shiny_data()$BOROUGH_GROUP))
-        clusterOptions <- markerClusterOptions()
-    })
+    ## Xinying Feng Maps part ends  ------------------------------------------------------------------------------
     
-    # tab panel 2 - Home -------------------------------------------------------------------------------------------------------
+    # tab panel 2 - Search 
     
-    ## Yue Liang boxes part
+    ## Xinying Feng Search part starts ------------------------------------------------------------------------------
+    
+    output$table <- DT::renderDataTable(
+        DT::datatable(address, filter = "top"))
+    
+    ## Xinying Feng Search part ends ------------------------------------------------------------------------------
+    
+    # tab panel 3 - Home 
+    
+    ## Yue Liang boxes part starts---------------------------------------------------------------------------------------
     case_number <- read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/summary.csv")
-    output$total_case <- renderValueBox({
-        formatC(as.numeric(as.character(case_number[1,2])), format="d", big.mark=",") %>%
-            valueBox(subtitle = "Cumulative Counts of Cases",
-                     icon = icon("biohazard"),
-                     color = "orange")
+    output$total_case <- renderText({
+        formatC(as.numeric(as.character(case_number[1,2])), format="d", big.mark=",") 
     })
     
-    output$death_rate <- renderValueBox({
-        paste(round(100*as.numeric(as.character(case_number[3,2]))/as.numeric(as.character(case_number[1,2])), 2), "%", sep="") %>%
-            valueBox(subtitle = "Comfirmed Death Rate",
-                     icon = icon("percentage"),
-                     color = "purple")
+    output$hospital_rate <- renderText({
+        paste(round(100*as.numeric(as.character(case_number[2,2]))/as.numeric(as.character(case_number[1,2])), 1), "%", sep="")
     })
     
-    output$date <- renderValueBox({
-        valueBox(paste(substring(as.character(case_number[5,2]),1,3),substring(as.character(case_number[5,2]),str_locate(as.character(case_number[5,2]), ' ')[1,1]+1,str_locate(as.character(case_number[5,2]), ',')[1,1]-1),sep=" "),subtitle = "Update Date",
-                     icon = icon("calendar"),
-                     color = "green")
+    output$death_rate <- renderText({
+        paste(round(100*as.numeric(as.character(case_number[3,2]))/as.numeric(as.character(case_number[1,2])), 1), "%", sep="")
     })
     
-    # Home end -----------------------------------------------------------------------------------------------------
+    output$date <- renderText({
+        paste(substring(as.character(case_number[5,2]),1,3),substring(as.character(case_number[5,2]),str_locate(as.character(case_number[5,2]), ' ')[1,1]+1,str_locate(as.character(case_number[5,2]), ',')[1,1]-1),sep=" ")
+    })
+    ## Yue Liang boxes part ends---------------------------------------------------------------------------------------
+    
+    # tab panel 4 - Statistical Analysis ------------------------------------------------------------------------------
+    
+    ## Yue Liang Statistical Plots starts -----------------------------------------------------------------------------
     
     by_boro <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/by-boro.csv"))
     by_boro$CASE_RATE <- by_boro$CASE_RATE/100000
@@ -143,12 +168,44 @@ shinyServer(function(input,output){
     })
     
     by_poverty <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/by-poverty.csv"))
+    by_poverty$CASE_RATE_ADJ <- by_poverty$CASE_RATE_ADJ/100000
+    by_poverty$HOSPITALIZED_RATE_ADJ <- by_poverty$HOSPITALIZED_RATE_ADJ/100000
+    by_poverty$DEATH_RATE_ADJ <- by_poverty$DEATH_RATE_ADJ/100000
     
-    poverty <- ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=POVERTY_GROUP)) + 
-        geom_bar(stat="identity",fill="#edae49")
-
-    output$case_rate_poverty <- renderPlotly({
-        ggplotly(poverty)
+    output$case_rate_poverty <- renderPlot({
+        ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+            geom_bar(stat="identity",fill="#edae49") +
+            xlab("POVERTY_GROUP")
+    })
+    
+    output$hospitalized_rate_poverty <- renderPlot({
+        ggplot(by_poverty, aes(y=HOSPITALIZED_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+            geom_bar(stat="identity",fill="#edae49") +
+            xlab("POVERTY_GROUP")
+    })
+    
+    output$death_rate_poverty <- renderPlot({
+        ggplot(by_poverty, aes(y=DEATH_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+            geom_bar(stat="identity",fill="#edae49") +
+            xlab("POVERTY_GROUP")
+    })
+    
+    output$case_count_poverty <- renderPlot({
+        ggplot(by_poverty, aes(y=CASE_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+            geom_bar(stat="identity",fill="#edae49") +
+            xlab("POVERTY_GROUP")
+    })
+    
+    output$hospitalized_count_poverty <- renderPlot({
+        ggplot(by_poverty, aes(y=HOSPITALIZED_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+            geom_bar(stat="identity",fill="#edae49") +
+            xlab("POVERTY_GROUP")
+    })
+    
+    output$death_count_poverty <- renderPlot({
+        ggplot(by_poverty, aes(y=DEATH_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+            geom_bar(stat="identity",fill="#edae49") +
+            xlab("POVERTY_GROUP")
     })
     
     index <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/case-hosp-death.csv"))
@@ -161,9 +218,35 @@ shinyServer(function(input,output){
                         scale_x_date(date_labels = "%b/%d")
     
     output$ggplotly_index <- renderPlotly({
-        ggplotly(index_gg)
+        ggplotly(index_gg) %>%
+            layout(hoverlabel= c(bgcolor =  'black'))
     })
     
+    ## Yue Liang Statistical Plots ends -----------------------------------------------------------------------------
     
+    ## Yue Liang About parts starts -----------------------------------------------------------------------------
+    url_YL <- a("LinkedIn", href="https://www.linkedin.com/in/yue-liang-cu/")
+    url_XLS <- a("LinkedIn", href="https://www.linkedin.com/in/xiaolisun11235/")
+    url_XYF <- a("LinkedIn", href="https://www.linkedin.com/in/feng-xinying/")
+    url_HYW <- a("LinkedIn", href="https://www.linkedin.com/in/hanyi-wang-52004b17a/")
+    
+    
+    output$LinkedIn_YL <- renderUI({
+        url_YL
+    })
+    
+    output$LinkedIn_XLS <- renderUI({
+        url_XLS
+    })
+    
+    output$LinkedIn_XYF <- renderUI({
+        url_XYF
+    })
+    
+    output$LinkedIn_HYW <- renderUI({
+        url_HYW
+    })
+    
+    ## Yue Liang About parts ends -----------------------------------------------------------------------------
 })
 
