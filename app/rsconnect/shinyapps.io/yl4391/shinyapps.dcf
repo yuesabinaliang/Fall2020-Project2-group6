@@ -5,8 +5,8 @@ account: yl4391
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3016868
-bundleId: 3742059
+bundleId: 3742099
 url: https://yl4391.shinyapps.io/shinyapps/
-when: 1602713040.01755
+when: 1602713569.27327
 asMultiple: FALSE
 asStatic: FALSE
