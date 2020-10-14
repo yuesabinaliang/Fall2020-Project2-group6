@@ -211,10 +211,11 @@ shinyServer(function(input,output){
     
     
     poverty <- ggplot(by_poverty, aes(y=DEATH_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
-        geom_bar(stat="identity",fill="#edae49")
+        geom_bar(stat="identity",fill="#edae49") +
+        xlab("POVERTY_GROUP")
     
-    output$death_rate_poverty_plotly <- renderPlotly({
-        ggplotly(poverty)
+    output$death_rate_poverty_plot <- renderPlot({
+        poverty
     })
         
     index <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/case-hosp-death.csv"))
