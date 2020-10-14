@@ -27,7 +27,7 @@ The **learning goals** for this project is:
 Term: Fall 2020
 
 + Team #6
-+ Shiny Link: https://yl4391.shinyapps.io/Fall2020-Project2-Group6/
++ Shiny Link: https://yl4391.shinyapps.io/shinyapps/
 
 + **Team members**:
 	+ Feng, Xinying
