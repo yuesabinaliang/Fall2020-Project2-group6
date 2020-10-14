@@ -210,10 +210,10 @@ shinyServer(function(input,output){
     })
     
     
-    poverty <- ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=POVERTY_GROUP)) + 
+    poverty <- ggplot(by_poverty, aes(y=DEATH_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
         geom_bar(stat="identity",fill="#edae49")
     
-    output$case_rate_poverty_plotly <- renderPlotly({
+    output$death_rate_poverty_plotly <- renderPlotly({
         ggplotly(poverty)
     })
         

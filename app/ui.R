@@ -253,7 +253,7 @@ bootstrapPage(
                                           tags$li(em("ZCTA: ZIP Code Tabulation Area")),
                                           tags$li(em("FPT: Federal Poverty Threshold"))
                                         )))),
-                          fluidRow(plotlyOutput("case_rate_poverty_plotly"))))
+                          fluidRow(plotlyOutput("death_rate_poverty_plotly"))))
                 ),
 
                 # Yue Liang sub3 ends--------------------------------------------------------------------------------------------
