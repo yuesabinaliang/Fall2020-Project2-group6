@@ -253,27 +253,8 @@ bootstrapPage(
                                           tags$li(em("ZCTA: ZIP Code Tabulation Area")),
                                           tags$li(em("FPT: Federal Poverty Threshold"))
                                         )))),
-                        fluidRow
-                        (tabBox(
-                          width=6,
-                          title = tagList(shiny::icon("user"), "Cases Number by Poverty"),
-                          tabPanel("Case Count",
-                                   plotOutput("case_count_poverty")),
-                          tabPanel("Hospitalized Count",
-                                   plotOutput("hospitalized_count_poverty")),
-                          tabPanel("Death Count",
-                                   plotOutput("death_count_poverty"))),
-                          
-                          tabBox(
-                            width=6,
-                            title = tagList(shiny::icon("percent"), "Cases Rate by Poverty Population"),
-                            tabPanel("Case Rate",
-                                     plotOutput("death_rate_poverty")),
-                            tabPanel("Hospitalized Rate",
-                                     plotOutput("hospitalized_rate_poverty")),
-                            tabPanel("Death Rate",
-                                     plotOutput("death_rate_poverty")))
-                        )))),
+                          fluidRow(plotlyOutput("case_rate_poverty_plotly"))))
+                ),
 
                 # Yue Liang sub3 ends--------------------------------------------------------------------------------------------
 

@@ -130,84 +130,93 @@ shinyServer(function(input,output){
     by_boro$CASE_RATE <- by_boro$CASE_RATE/100000
     by_boro$HOSPITALIZED_RATE <- by_boro$HOSPITALIZED_RATE/100000
     by_boro$DEATH_RATE <- by_boro$DEATH_RATE/100000
-    
+
     output$CASE_RATE <- renderPlot({
-        ggplot(by_boro, aes(y=CASE_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        ggplot(by_boro, aes(y=CASE_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) +
         geom_bar(stat="identity",fill="lightblue") +
         xlab("BOROUGH_GROUP")
         })
-        
+
     output$HOSPITALIZED_RATE <- renderPlot({
-        ggplot(by_boro, aes(y=HOSPITALIZED_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        ggplot(by_boro, aes(y=HOSPITALIZED_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) +
         geom_bar(stat="identity",fill="lightblue") +
         xlab("BOROUGH_GROUP")
     })
-    
+
     output$DEATH_RATE <- renderPlot({
-        ggplot(by_boro, aes(y=DEATH_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        ggplot(by_boro, aes(y=DEATH_RATE, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) +
         geom_bar(stat="identity",fill="lightblue") +
         xlab("BOROUGH_GROUP")
     })
-    
+
     output$CASE_COUNT <- renderPlot({
-        ggplot(by_boro, aes(y=CASE_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        ggplot(by_boro, aes(y=CASE_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) +
         geom_bar(stat="identity",fill="lightblue") +
         xlab("BOROUGH_GROUP")
     })
-    
+
     output$HOSPITALIZED_COUNT <- renderPlot({
-        ggplot(by_boro, aes(y=HOSPITALIZED_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        ggplot(by_boro, aes(y=HOSPITALIZED_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) +
         geom_bar(stat="identity",fill="lightblue") +
         xlab("BOROUGH_GROUP")
     })
-    
+
     output$DEATH_COUNT <- renderPlot({
-        ggplot(by_boro, aes(y=DEATH_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) + 
+        ggplot(by_boro, aes(y=DEATH_COUNT, x=reorder(by_boro$BOROUGH_GROUP,c(1,2,3,4,5,6)))) +
         geom_bar(stat="identity",fill="lightblue") +
         xlab("BOROUGH_GROUP")
     })
-    
+
     by_poverty <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/by-poverty.csv"))
+    
     by_poverty$CASE_RATE_ADJ <- by_poverty$CASE_RATE_ADJ/100000
     by_poverty$HOSPITALIZED_RATE_ADJ <- by_poverty$HOSPITALIZED_RATE_ADJ/100000
     by_poverty$DEATH_RATE_ADJ <- by_poverty$DEATH_RATE_ADJ/100000
-    
+
     output$case_rate_poverty <- renderPlot({
-        ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+        ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) +
             geom_bar(stat="identity",fill="#edae49") +
             xlab("POVERTY_GROUP")
     })
-    
+
     output$hospitalized_rate_poverty <- renderPlot({
-        ggplot(by_poverty, aes(y=HOSPITALIZED_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+        ggplot(by_poverty, aes(y=HOSPITALIZED_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) +
             geom_bar(stat="identity",fill="#edae49") +
             xlab("POVERTY_GROUP")
     })
-    
+
     output$death_rate_poverty <- renderPlot({
-        ggplot(by_poverty, aes(y=DEATH_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+        ggplot(by_poverty, aes(y=DEATH_RATE_ADJ, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) +
             geom_bar(stat="identity",fill="#edae49") +
             xlab("POVERTY_GROUP")
     })
-    
+
     output$case_count_poverty <- renderPlot({
-        ggplot(by_poverty, aes(y=CASE_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+        ggplot(by_poverty, aes(y=CASE_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) +
             geom_bar(stat="identity",fill="#edae49") +
             xlab("POVERTY_GROUP")
     })
-    
+
     output$hospitalized_count_poverty <- renderPlot({
-        ggplot(by_poverty, aes(y=HOSPITALIZED_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+        ggplot(by_poverty, aes(y=HOSPITALIZED_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) +
             geom_bar(stat="identity",fill="#edae49") +
             xlab("POVERTY_GROUP")
     })
-    
+
     output$death_count_poverty <- renderPlot({
-        ggplot(by_poverty, aes(y=DEATH_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) + 
+        ggplot(by_poverty, aes(y=DEATH_COUNT, x=reorder(by_poverty$POVERTY_GROUP,c(1,2,3,4)))) +
             geom_bar(stat="identity",fill="#edae49") +
             xlab("POVERTY_GROUP")
     })
     
+    
+    poverty <- ggplot(by_poverty, aes(y=CASE_RATE_ADJ, x=POVERTY_GROUP)) + 
+        geom_bar(stat="identity",fill="#edae49")
+    
+    output$case_rate_poverty_plotly <- renderPlotly({
+        ggplotly(poverty)
+    })
+        
     index <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/case-hosp-death.csv"))
     
     index_df <- melt(index[,1:4],id="DATE_OF_INTEREST")
