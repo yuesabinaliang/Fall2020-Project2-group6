@@ -221,11 +221,11 @@ shinyServer(function(input,output){
     index <- data.frame(read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"))
     
     index_df <- melt(index[,1:4],id="date_of_interest")
-    index_df$date_of_interest<- as.Date(index_df$date_of_interest,format = "%m/%d/%y")
+    index_df$date_of_interest<- as.Date(index_df$date_of_interest,format = "%m/%d/%Y")
     
     index_gg <- ggplot(index_df,aes(x=date_of_interest,y=value,color=variable,group= variable)) +
                         geom_line() +
-                        scale_x_date(date_labels = "%b/%d")
+                        scale_x_date(date_labels = "%y/%b/%d")
     
     output$ggplotly_index <- renderPlotly({
         ggplotly(index_gg) %>%
